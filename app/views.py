@@ -21,16 +21,24 @@ class ProdcutCRUD(APIView):
             return Response({'message':'Product is Created'})
         return Response({'Failed':'Product is not Created'})
 
-    def put(self, request):
-        id=request.data['id']
-        PO=Product.objects.get(id=id)
+    def put(self, request, pk):
+        PO=Product.objects.get(pk=pk)
         UPO=ProductSerializer(PO,data=request.data)
         if UPO.is_valid():
             UPO.save()
             return Response({'message':'Product is Updated'})
         return Response({'Failed':'Product is not Updated'})
-        
-    def delete(self, request):
-        pass
-
     
+    def patch(self, request, pk):
+        PO=Product.objects.get(pk=pk)
+        UPO=ProductSerializer(PO,data=request.data,partial=True)
+        if UPO.is_valid():
+            UPO.save()
+            return Response({'message':'Product is Partially Updated'})
+        return Response({'Failed':'Product is not Partially Updated'})
+    
+    def delete(self, request, pk):
+        PO=Product.objects.get(pk=pk)
+        PO.delete()
+        return Response({'message':'Product is Deleted'})
+        
